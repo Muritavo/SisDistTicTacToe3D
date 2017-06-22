@@ -10,41 +10,19 @@ package jogodavelha3d;
  * @author Murilo
  */
 public class Jogo {
+    public StatusJogo statusJogo;
     private Player player1;
     private Player player2;
     
     private Ponto[][][] ambienteJogo = new Ponto[3][3][3];
-
-    public boolean playerVenceu(Ponto pontoJogada) {
-        int xAux = (int) (pontoJogada.getX() - 1);
-        int yAux = (int) (pontoJogada.getY() - 1);
-        int zAux = (int) (pontoJogada.getZ() - 1);
-
-        //Itera sobre o X
-        while (xAux <= pontoJogada.getX() + 1) {
-            //Itera sobre o Y
-            while (yAux <= pontoJogada.getY() + 1) {
-                //Itera sobre o Z
-                while (zAux <= pontoJogada.getZ() + 1) {
-                    Ponto pontoVizinho = getPointAt(xAux, yAux, zAux);
-                    if (pontoVizinho == pontoJogada) {
-                        continue;
-                    }
-                    if (pontoVizinho != null && pontoVizinho.getSimbolo() == pontoJogada.getSimbolo()) {
-                        Ponto pontoAnterior = getNextPoint(pontoJogada, pontoVizinho);
-                        if (pontoAnterior != null && pontoAnterior.getSimbolo() == pontoJogada.getSimbolo()) {
-                            return true;
-                        }
-
-                        Ponto proximoPonto = getNextPoint(pontoVizinho, pontoJogada);
-                        if (proximoPonto != null && proximoPonto.getSimbolo() == pontoJogada.getSimbolo()) {
-                            return true;
-                        }
-                    }
-                }
-            }
+    
+    public void setJogada(Ponto pontoJogada, Player jogador) throws Exception {
+        if (getPointAt((int)pontoJogada.getX(), (int)pontoJogada.getY(), (int)pontoJogada.getZ()) == null) {
+            ambienteJogo[(int)pontoJogada.getX()][(int)pontoJogada.getY()][(int)pontoJogada.getZ()] = pontoJogada;
+            updateStatus(pontoJogada, jogador);
+        } else {
+            throw new Exception("Jogada não permitida");
         }
-        return false;
     }
     
     /**
@@ -86,5 +64,62 @@ public class Jogo {
 
     public Player getPlayer2() {
         return player2;
+    }
+
+    private void updateStatus(Ponto pontoJogada, Player jogador) {
+        if (checkIfIsWinningPoint(pontoJogada)) {
+            if (jogador == player1) {
+                //Seta que O JOGADOR 1 VENCEU
+                statusJogo = StatusJogo.PLAYER_1_VENCEU;
+            } else {
+                //SETA QUE o jogador 2 venceu
+                statusJogo = StatusJogo.PLAYER_2_VENCEU;
+            }
+        } else {
+            //Set que o jogo esta em andamento
+            statusJogo = StatusJogo.EM_JOGO;
+        }
+    }
+
+    private boolean checkIfIsWinningPoint(Ponto pontoJogada) {
+        int xAux = (int) (pontoJogada.getX() - 1);
+        int yAux = (int) (pontoJogada.getY() - 1);
+        int zAux = (int) (pontoJogada.getZ() - 1);
+        int xInicial = xAux;
+        int yInicial = yAux;
+        int zInicial = zAux;
+
+        //Itera sobre o X
+        while (xAux <= pontoJogada.getX() + 1) {
+            //Itera sobre o Y
+            while (yAux <= pontoJogada.getY() + 1) {
+                //Itera sobre o Z
+                while (zAux <= pontoJogada.getZ() + 1) {
+                    Ponto pontoVizinho = getPointAt(xAux, yAux, zAux);
+                    if (pontoVizinho == pontoJogada) {
+                        zAux++;
+                        continue;
+                    }
+                    if (pontoVizinho != null && pontoVizinho.getSimbolo() == pontoJogada.getSimbolo()) {
+                        Ponto pontoAnterior = getNextPoint(pontoJogada, pontoVizinho);
+                        if (pontoAnterior != null && pontoAnterior.getSimbolo() == pontoJogada.getSimbolo()) {
+                            return true;
+                        }
+
+                        Ponto proximoPonto = getNextPoint(pontoVizinho, pontoJogada);
+                        if (proximoPonto != null && proximoPonto.getSimbolo() == pontoJogada.getSimbolo()) {
+                            return true;
+                        }
+                    }
+                    zAux++;
+                }
+                zAux = zInicial;
+                yAux++;
+            }
+            zAux = zInicial;
+            yAux = yInicial;
+            xAux++;
+        }
+        return false;
     }
 }
