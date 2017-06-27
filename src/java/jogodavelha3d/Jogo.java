@@ -10,21 +10,27 @@ package jogodavelha3d;
  * @author Murilo
  */
 public class Jogo {
-    public StatusJogo statusJogo;
+    public StatusJogo statusJogo = StatusJogo.EM_JOGO;
     private Player player1;
     private Player player2;
-    
+    private Player nextToPlay;
+
     private Ponto[][][] ambienteJogo = new Ponto[3][3][3];
-    
+
     public void setJogada(Ponto pontoJogada, Player jogador) throws Exception {
-        if (getPointAt((int)pontoJogada.getX(), (int)pontoJogada.getY(), (int)pontoJogada.getZ()) == null) {
-            ambienteJogo[(int)pontoJogada.getX()][(int)pontoJogada.getY()][(int)pontoJogada.getZ()] = pontoJogada;
-            updateStatus(pontoJogada, jogador);
+        if (jogador == this.nextToPlay) {
+            if (getPointAt((int) pontoJogada.getX(), (int) pontoJogada.getY(), (int) pontoJogada.getZ()) == null) {
+                switchPlayer();
+                ambienteJogo[(int) pontoJogada.getX()][(int) pontoJogada.getY()][(int) pontoJogada.getZ()] = pontoJogada;
+                updateStatus(pontoJogada, jogador);
+            } else {
+                throw new Exception("Jogada não permitida");
+            }
         } else {
-            throw new Exception("Jogada não permitida");
+            throw new Exception("Não é a vez do jogador");
         }
     }
-    
+
     /**
      *
      * @param ponto1 O primeiro ponto
@@ -36,7 +42,11 @@ public class Jogo {
         int yDiff = (int) (ponto2.getY() - ponto1.getY());
         int zDiff = (int) (ponto2.getZ() - ponto1.getZ());
 
-        return getPointAt(xDiff, yDiff, zDiff);
+        return getPointAt(
+                (int) (ponto2.getX() + xDiff),
+                (int) (ponto2.getY() + yDiff),
+                (int) (ponto2.getZ() + zDiff)
+        );
     }
 
     public Ponto getPointAt(int x, int y, int z) {
@@ -52,10 +62,17 @@ public class Jogo {
 
     public void setPlayer1(Player player1) {
         this.player1 = player1;
+        this.nextToPlay = this.player1;
+        if (statusJogo == StatusJogo.EM_JOGO && player1 == null) {
+            statusJogo = StatusJogo.PLAYER_2_VENCEU_WO;
+        }
     }
 
     public void setPlayer2(Player player2) {
         this.player2 = player2;
+        if (statusJogo == StatusJogo.EM_JOGO && player2 == null) {
+            statusJogo = StatusJogo.PLAYER_1_VENCEU_WO;
+        }
     }
 
     public Player getPlayer1() {
@@ -121,5 +138,9 @@ public class Jogo {
             xAux++;
         }
         return false;
+    }
+
+    private void switchPlayer() {
+        nextToPlay = (nextToPlay == player1) ? player2 : player1;
     }
 }

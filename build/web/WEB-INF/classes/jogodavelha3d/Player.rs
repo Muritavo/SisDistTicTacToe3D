@@ -1,2 +1,0 @@
-jogodavelha3d.IDGenerator
-jogodavelha3d.Player
