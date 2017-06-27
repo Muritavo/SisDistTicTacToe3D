@@ -12,6 +12,7 @@ package jogodavelha3d;
 public class Player {
     private int ID;
     private String nome;
+    public Jogo jogo;
 
     public Player(int ID, String nome) {
         this.ID = ID;

@@ -16,17 +16,15 @@ import javax.jws.WebParam;
  */
 @WebService(serviceName = "JogoDaVelha3DWS_Service")
 public class JogoDaVelha3DWS_Service {
-    List<Jogo> jogosEmAberto;
-    List<Jogo> jogosOcupados;
-    List<Player> jogadores;
+    private GerenciadorJogo gerenciador = new GerenciadorJogo(500);
     
     /**
      * Web service operation
      */
     @WebMethod(operationName = "preRegistro")
-    public int preRegistro(@WebParam(name = "nomeJogador1") String nomeJogador1, @WebParam(name = "idJogador1") String idJogador1, @WebParam(name = "nomeJogador2") String nomeJogador2, @WebParam(name = "idJogador2") String idJogador2) {
+    public int preRegistro(@WebParam(name = "nomeJogador1") String nomeJogador1, @WebParam(name = "idJogador1") int idJogador1, @WebParam(name = "nomeJogador2") String nomeJogador2, @WebParam(name = "idJogador2") int idJogador2) {
         //TODO write your implementation code here:
-        return 0;
+        return gerenciador.preRegistro(nomeJogador1, idJogador1, nomeJogador2, idJogador2);
     }
 
     /**
@@ -35,7 +33,7 @@ public class JogoDaVelha3DWS_Service {
     @WebMethod(operationName = "registraJogador")
     public int registraJogador(@WebParam(name = "nomeJogador") String nomeJogador) {
         //TODO write your implementation code here:
-        return 0;
+        return gerenciador.registraJogador(nomeJogador);
     }
 
     /**
@@ -44,7 +42,7 @@ public class JogoDaVelha3DWS_Service {
     @WebMethod(operationName = "encerraPartida")
     public int encerraPartida(@WebParam(name = "idJogador") int idJogador) {
         //TODO write your implementation code here:
-        return 0;
+        return gerenciador.encerraPartida(idJogador);
     }
 
     /**
@@ -53,7 +51,7 @@ public class JogoDaVelha3DWS_Service {
     @WebMethod(operationName = "temPartida")
     public int temPartida(@WebParam(name = "idJogador") int idJogador) {
         //TODO write your implementation code here:
-        return 0;
+        return gerenciador.temPartida(idJogador);
     }
 
     /**
@@ -62,7 +60,7 @@ public class JogoDaVelha3DWS_Service {
     @WebMethod(operationName = "ehMinhaVez")
     public int ehMinhaVez(@WebParam(name = "idJogador") int idJogador) {
         //TODO write your implementation code here:
-        return 0;
+        return gerenciador.ehMinhaVez(idJogador);
     }
 
     /**
@@ -71,7 +69,7 @@ public class JogoDaVelha3DWS_Service {
     @WebMethod(operationName = "obtemTabuleiro")
     public String obtemTabuleiro(@WebParam(name = "idJogador") int idJogador) {
         //TODO write your implementation code here:
-        return null;
+        return gerenciador.obtemTabuleiro(idJogador);
     }
 
     /**
@@ -80,7 +78,7 @@ public class JogoDaVelha3DWS_Service {
     @WebMethod(operationName = "realizaJogada")
     public int realizaJogada(@WebParam(name = "idJogador") int idJogador, @WebParam(name = "nivel") int nivel, @WebParam(name = "linha") int linha, @WebParam(name = "coluna") int coluna) {
         //TODO write your implementation code here:
-        return 0;
+        return gerenciador.realizaJogada(idJogador, nivel, linha, coluna);
     }
 
     /**
@@ -89,6 +87,6 @@ public class JogoDaVelha3DWS_Service {
     @WebMethod(operationName = "obtemOponente")
     public String obtemOponente(@WebParam(name = "idJogador") int idJogador) {
         //TODO write your implementation code here:
-        return null;
+        return gerenciador.obtemOponente(idJogador);
     }
 }

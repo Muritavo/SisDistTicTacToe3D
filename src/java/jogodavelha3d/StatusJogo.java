@@ -10,6 +10,6 @@ package jogodavelha3d;
  * @author murit
  */
 public enum StatusJogo {
-    PLAYER_1_VENCEU, PLAYER_2_VENCEU, EM_JOGO, PLAYER_2_VENCEU_WO, PLAYER_1_VENCEU_WO
+    PLAYER_1_VENCEU, PLAYER_2_VENCEU, EM_JOGO, PLAYER_2_VENCEU_WO, PLAYER_1_VENCEU_WO, EM_ABERTO
     
 }

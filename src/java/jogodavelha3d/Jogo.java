@@ -10,10 +10,10 @@ package jogodavelha3d;
  * @author Murilo
  */
 public class Jogo {
-    public StatusJogo statusJogo = StatusJogo.EM_JOGO;
+    public StatusJogo statusJogo = StatusJogo.EM_ABERTO;
     private Player player1;
     private Player player2;
-    private Player nextToPlay;
+    public Player nextToPlay;
 
     private Ponto[][][] ambienteJogo = new Ponto[3][3][3];
 
@@ -66,12 +66,18 @@ public class Jogo {
         if (statusJogo == StatusJogo.EM_JOGO && player1 == null) {
             statusJogo = StatusJogo.PLAYER_2_VENCEU_WO;
         }
+        if (statusJogo == StatusJogo.EM_ABERTO && (this.player1 != null && this.player2 != null)) {
+            statusJogo = StatusJogo.EM_JOGO;
+        }
     }
 
     public void setPlayer2(Player player2) {
         this.player2 = player2;
         if (statusJogo == StatusJogo.EM_JOGO && player2 == null) {
             statusJogo = StatusJogo.PLAYER_1_VENCEU_WO;
+        }
+        if (statusJogo == StatusJogo.EM_ABERTO && (this.player1 != null && this.player2 != null)) {
+            statusJogo = StatusJogo.EM_JOGO;
         }
     }
 
@@ -142,5 +148,16 @@ public class Jogo {
 
     private void switchPlayer() {
         nextToPlay = (nextToPlay == player1) ? player2 : player1;
+    }
+    
+    public int partidaLivre() {
+        if (player1 == null) {
+            return 1;
+        }
+        if (player2 == null) {
+            return 2;
+        }
+        
+        return 0;
     }
 }
