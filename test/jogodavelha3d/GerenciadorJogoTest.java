@@ -81,4 +81,77 @@ public class GerenciadorJogoTest {
         assertEquals(0, jogo.ehMinhaVez(p2ID)); //Nao e a vez do P2
         assertEquals(1, jogo.ehMinhaVez(p1ID)); //Eh a vez de P1
     }
+    
+    @Test
+    public void TestObtemOponente() {
+        int p1ID = jogo.registraJogador(p1);
+        assertEquals("", jogo.obtemOponente(p1ID));
+        int p2ID = jogo.registraJogador(p2);
+        assertEquals("Gustavo", jogo.obtemOponente(p1ID));
+        assertEquals("Murilo", jogo.obtemOponente(p2ID));
+    }
+    
+    @Test
+    public void TestRealizaJogada() {
+        int p1ID = jogo.registraJogador(p1);
+        assertEquals(-1, jogo.realizaJogada(-84123, 0, 1, 0)); //ID nao existe ERRO
+        assertEquals(-2, jogo.realizaJogada(p1ID, 0, 1, 0)); //Não iniciou a partida
+        int p2ID = jogo.registraJogador(p2);
+        assertEquals(1, jogo.realizaJogada(p1ID, 0, 1, 0)); //Jogada válida
+        assertEquals(-3, jogo.realizaJogada(p1ID, 0, 2, 0)); //Não pode jogar denovo
+        assertEquals(0, jogo.realizaJogada(p2ID, 0, 1, 0)); //Casa já ocupada
+    }
+    
+    @Test
+    public void TestRealizaJogadaAteEmpate() {
+        int p1ID = jogo.registraJogador(p1);
+        int p2ID = jogo.registraJogador(p2);
+        
+        jogo.realizaJogada(p1ID, 0, 0, 0);
+        jogo.realizaJogada(p2ID, 0, 0, 1);
+        jogo.realizaJogada(p1ID, 0, 0, 2);
+        jogo.realizaJogada(p2ID, 0, 1, 0);
+        jogo.realizaJogada(p1ID, 0, 1, 1);
+        jogo.realizaJogada(p2ID, 0, 1, 2);
+        jogo.realizaJogada(p1ID, 0, 2, 0);
+        jogo.realizaJogada(p2ID, 0, 2, 1);
+        jogo.realizaJogada(p1ID, 0, 2, 2);
+        
+        jogo.realizaJogada(p2ID, 1, 0, 0);
+        jogo.realizaJogada(p1ID, 1, 0, 1);
+        jogo.realizaJogada(p2ID, 1, 0, 2);
+        jogo.realizaJogada(p1ID, 1, 1, 0);
+        jogo.realizaJogada(p2ID, 1, 1, 1);
+        jogo.realizaJogada(p1ID, 1, 1, 2);
+        jogo.realizaJogada(p2ID, 1, 2, 0);
+        jogo.realizaJogada(p1ID, 1, 2, 1);
+        jogo.realizaJogada(p2ID, 1, 2, 2);
+        
+        jogo.realizaJogada(p1ID, 2, 0, 0);
+        jogo.realizaJogada(p2ID, 2, 0, 1);
+        jogo.realizaJogada(p1ID, 2, 0, 2);
+        jogo.realizaJogada(p2ID, 2, 1, 0);
+        jogo.realizaJogada(p1ID, 2, 1, 1);
+        jogo.realizaJogada(p2ID, 2, 1, 2);
+        jogo.realizaJogada(p1ID, 2, 2, 0);
+        jogo.realizaJogada(p2ID, 2, 2, 1);
+        jogo.realizaJogada(p1ID, 2, 2, 2);
+        
+        assertEquals("xoxoxoxoxoxoxoxoxoxoxoxoxox", jogo.obtemTabuleiro(p1ID));
+        assertEquals(4, jogo.ehMinhaVez(p1ID));
+        assertEquals(4, jogo.ehMinhaVez(p2ID));
+    }
+    
+    @Test
+    public void TestObtemTabuleiro() {
+        int p1ID = jogo.registraJogador(p1);
+        int p2ID = jogo.registraJogador(p2);
+        jogo.realizaJogada(p1ID, 0, 0, 0);
+        jogo.realizaJogada(p2ID, 2, 2, 2);
+        jogo.realizaJogada(p1ID, 1, 1, 0);
+        jogo.realizaJogada(p2ID, 2, 2, 0);
+        
+        assertEquals("x...........x...........o.o", jogo.obtemTabuleiro(p1ID));
+        assertEquals("x...........x...........o.o", jogo.obtemTabuleiro(p2ID));
+    }
 }

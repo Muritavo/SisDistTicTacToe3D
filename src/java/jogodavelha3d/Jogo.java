@@ -15,6 +15,7 @@ public class Jogo {
     private Player player2;
     public Player nextToPlay;
 
+    private int casasOcupadas = 0;
     private Ponto[][][] ambienteJogo = new Ponto[3][3][3];
 
     public void setJogada(Ponto pontoJogada, Player jogador) throws Exception {
@@ -22,6 +23,7 @@ public class Jogo {
             if (getPointAt((int) pontoJogada.getX(), (int) pontoJogada.getY(), (int) pontoJogada.getZ()) == null) {
                 switchPlayer();
                 ambienteJogo[(int) pontoJogada.getX()][(int) pontoJogada.getY()][(int) pontoJogada.getZ()] = pontoJogada;
+                casasOcupadas++;
                 updateStatus(pontoJogada, jogador);
             } else {
                 throw new Exception("Jogada não permitida");
@@ -99,8 +101,12 @@ public class Jogo {
                 statusJogo = StatusJogo.PLAYER_2_VENCEU;
             }
         } else {
+            if (casasOcupadas == 27) {
+                statusJogo = StatusJogo.EMPATE;
+            } else {
+                statusJogo = StatusJogo.EM_JOGO;
+            }
             //Set que o jogo esta em andamento
-            statusJogo = StatusJogo.EM_JOGO;
         }
     }
 
@@ -160,4 +166,35 @@ public class Jogo {
         
         return 0;
     }
+
+    @Override
+    public String toString() {
+        String str = "";
+        int xAux = 0;
+        int yAux = 0;
+        int zAux = 0;
+        while (zAux <= 2) {
+            //Itera sobre o Y
+            while (yAux <= 2) {
+                //Itera sobre o Z
+                while (xAux <= 2) {
+                    Ponto ponto = getPointAt(xAux, yAux, zAux);
+                    if (ponto == null) {
+                        str = str.concat(".");
+                    } else {
+                        str = str.concat(String.valueOf(ponto.getSimbolo()));
+                    }
+                    xAux++;
+                }
+                xAux = 0;
+                yAux++;
+            }
+            xAux = 0;
+            yAux = 0;
+            zAux++;
+        }
+        return str;
+    }
+    
+    
 }

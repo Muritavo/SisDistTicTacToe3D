@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -124,21 +126,57 @@ public class GerenciadorJogo {
                return (p.jogo.getPlayer2() == p) ? 2 : 3;
            case PLAYER_2_VENCEU_WO:
                return (p.jogo.getPlayer2() == p) ? 5 : 6;
+           case EMPATE:
+               return 4;
             default:
-                return 4;
+                return -1;
        }
     }
 
     public String obtemTabuleiro(int idJogador) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Player p = jogadoresPorID.get(idJogador);
+        if (p == null || p.jogo == null) {
+            return "";
+        }
+        return p.jogo.toString();
     }
 
     public int realizaJogada(int idJogador, int nivel, int linha, int coluna) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Player p = jogadoresPorID.get(idJogador);
+        if (p == null || p.jogo == null) {
+            return -1;
+        }
+        if (p.jogo.statusJogo == StatusJogo.EM_ABERTO) {
+            return -2;
+        }
+        if (p.jogo.nextToPlay != p) {
+            return -3;
+        }
+        
+        Ponto ponto = null;
+        if (p.jogo.getPlayer1() == p) {
+            ponto = new Ponto(coluna, linha, nivel, 'x');
+        } else {
+            ponto = new Ponto(coluna, linha, nivel, 'o');
+        }
+        try {
+            p.jogo.setJogada(ponto, p);
+            return 1;
+        } catch (Exception ex) {
+            return 0;
+        }
     }
 
     public String obtemOponente(int idJogador) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Player p = jogadoresPorID.get(idJogador);
+        if (p == null || p.jogo == null || p.jogo.partidaLivre() != 0) {
+            return "";
+        }
+        if (p.jogo.getPlayer1() == p) {
+            return p.jogo.getPlayer2().getNome();
+        } else {
+            return p.jogo.getPlayer1().getNome();
+        }   
     }
 
     private Jogo getJogo() {
